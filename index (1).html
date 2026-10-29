@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alimatou Konaté Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Layout idea: an engineering drawing sheet. Blueprint grid, component designators (U1, U2...) for projects, a chip pinout for skills, a title block footer. */
+  --paper: #eef2f6;
+  --surface: #ffffff;
+  --ink: #0d1726;
+  --muted: #586579;
+  --line: #cfd8e3;
+  --blue: #1d4ed8;
+  --probe: #c2410c;
+  --grid: rgba(29, 78, 216, 0.07);
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0a111d; --surface: #101a2b; --ink: #e7edf6; --muted: #97a4b8;
+    --line: #23324a; --blue: #7aa7ff; --probe: #ff8f57; --grid: rgba(122, 167, 255, 0.06);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0a111d; --surface: #101a2b; --ink: #e7edf6; --muted: #97a4b8;
+  --line: #23324a; --blue: #7aa7ff; --probe: #ff8f57; --grid: rgba(122, 167, 255, 0.06);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--ink);
+  font: 400 16px/1.6 var(--body);
+}
+a { color: var(--blue); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--probe); outline-offset: 3px; border-radius: 4px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.1; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px); }
+.mono { font-family: var(--mono); }
+.label { font: 500 12px/1.4 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+/* Top bar */
+.top { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 0; flex-wrap: wrap; }
+.top nav { display: flex; gap: 20px; flex-wrap: wrap; }
+.top nav a { font: 500 13px var(--mono); color: var(--ink); text-decoration: none; }
+.top nav a:hover { color: var(--blue); }
+
+/* Hero */
+.hero { display: grid; grid-template-columns: 1.25fr 1fr; gap: clamp(24px, 4vw, 56px); align-items: center; padding: 32px 0 48px; }
+.hero h1 { font-size: clamp(44px, 7vw, 84px); font-weight: 800; letter-spacing: -0.03em; }
+.hero h1 span { color: var(--blue); }
+.hero .lede { font-size: clamp(17px, 1.6vw, 20px); color: var(--muted); max-width: 34em; margin: 20px 0 24px; }
+.hero .lede strong { color: var(--ink); font-weight: 600; }
+.status { display: inline-flex; align-items: center; gap: 10px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); font: 500 13px var(--mono); margin-bottom: 20px; }
+.status i { width: 8px; height: 8px; border-radius: 50%; background: var(--probe); box-shadow: 0 0 0 4px color-mix(in srgb, var(--probe) 20%, transparent); }
+.links { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 8px; font: 500 14px var(--mono); text-decoration: none; border: 1px solid var(--ink); color: var(--ink); background: var(--surface); }
+.btn.primary { background: var(--ink); color: var(--paper); }
+.btn:hover { border-color: var(--blue); color: var(--blue); }
+.btn.primary:hover { background: var(--blue); color: #fff; }
+
+.scope { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+.scope-head { display: flex; justify-content: space-between; margin-bottom: 10px; }
+.scope canvas { width: 100%; height: 190px; display: block; border-radius: 8px; }
+.readouts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; margin-top: 12px; }
+.readouts div { background: var(--surface); padding: 10px 12px; }
+.readouts b { display: block; font: 700 20px var(--display); font-variant-numeric: tabular-nums; }
+.readouts span { font: 400 12px var(--mono); color: var(--muted); }
+
+/* Sections */
+section { padding: 56px 0; border-top: 1px dashed var(--line); }
+.sec-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+.sec-head h2 { font-size: clamp(28px, 3.5vw, 40px); font-weight: 700; letter-spacing: -0.02em; }
+.sec-head p { color: var(--muted); margin: 0; max-width: 46em; }
+
+/* Projects */
+.projects { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.proj { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 12px; position: relative; }
+.proj.feature { grid-column: 1 / -1; display: grid; grid-template-columns: 1.3fr 1fr; gap: 28px; border-color: var(--blue); }
+.proj-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.ref { font: 500 13px var(--mono); color: var(--blue); border: 1px solid currentColor; border-radius: 4px; padding: 1px 7px; }
+.tag { font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.tag.live { color: var(--probe); }
+.proj h3 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
+.proj p { margin: 0; color: var(--muted); }
+.proj ul { margin: 0; padding-left: 18px; color: var(--muted); }
+.proj li { margin: 4px 0; }
+.proj li::marker { color: var(--blue); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 4px; }
+.chips span { font: 400 12px var(--mono); padding: 3px 8px; border-radius: 4px; background: color-mix(in srgb, var(--blue) 9%, transparent); color: var(--ink); }
+.award { display: inline-flex; gap: 8px; align-items: center; font: 500 13px var(--mono); color: var(--probe); }
+
+/* Block diagram in feature card */
+.diagram { border: 1px dashed var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 10px; align-content: center; }
+.diagram .row { display: grid; grid-template-columns: 1fr 24px 1fr 24px 1fr; align-items: center; }
+.node { border: 1.5px solid var(--ink); border-radius: 6px; padding: 8px 6px; text-align: center; font: 500 12px/1.3 var(--mono); background: var(--surface); }
+.node.hot { border-color: var(--probe); color: var(--probe); }
+.wire { height: 1.5px; background: var(--ink); position: relative; }
+.wire::after { content: ""; position: absolute; right: -1px; top: -4px; border: 5px solid transparent; border-left: 6px solid var(--ink); border-right: 0; }
+.diagram .cap { font: 400 12px var(--mono); color: var(--muted); text-align: center; }
+
+/* Pinout */
+.pinout-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 24px; overflow-x: auto; }
+#pinout { display: block; margin: 0 auto; min-width: 640px; max-width: 900px; width: 100%; height: auto; }
+.legend { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 12px; font: 400 12px var(--mono); color: var(--muted); }
+.legend i { display: inline-block; width: 18px; height: 3px; vertical-align: middle; margin-right: 6px; }
+
+/* Experience timeline */
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+.timeline { list-style: none; margin: 0; padding: 0; border-left: 2px solid var(--line); }
+.timeline li { position: relative; padding: 0 0 26px 24px; }
+.timeline li::before { content: ""; position: absolute; left: -7px; top: 6px; width: 12px; height: 12px; border-radius: 2px; background: var(--paper); border: 2px solid var(--blue); }
+.timeline h3 { font-size: 18px; font-weight: 700; }
+.timeline .where { font-weight: 500; }
+.timeline .when { font: 400 12px var(--mono); color: var(--muted); display: block; margin: 2px 0 6px; }
+.timeline p { margin: 0; color: var(--muted); font-size: 15px; }
+
+.facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.fact { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+.fact h3 { font-size: 18px; margin: 6px 0 10px; }
+.fact ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 15px; }
+.fact li { margin: 4px 0; }
+
+/* Title block footer */
+.titleblock { margin: 56px 0 40px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; border: 1.5px solid var(--ink); background: var(--surface); }
+.titleblock > div { padding: 14px 16px; border-left: 1.5px solid var(--ink); }
+.titleblock > div:first-child { border-left: 0; }
+.titleblock .label { display: block; margin-bottom: 4px; }
+.titleblock b { display: block; font: 700 18px var(--display); margin-top: 4px; }
+.titleblock a { font: 500 14px var(--mono); word-break: break-all; }
+
+@media (max-width: 880px) {
+  .hero, .proj.feature, .cols { grid-template-columns: 1fr; }
+  .projects, .facts { grid-template-columns: 1fr; }
+  .titleblock { grid-template-columns: 1fr 1fr; }
+  .titleblock > div:nth-child(3) { border-left: 0; }
+  .titleblock > div:nth-child(n+3) { border-top: 1.5px solid var(--ink); }
+}
+@media (max-width: 420px) {
+  .titleblock { grid-template-columns: 1fr; }
+  .titleblock > div { border-left: 0 !important; border-top: 1.5px solid var(--ink); }
+  .titleblock > div:first-child { border-top: 0; }
+  .diagram .row { grid-template-columns: 1fr 14px 1fr 14px 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <span class="label">AK · ECE · Temple University</span>
+    <nav aria-label="Sections">
+      <a href="#work">Work</a>
+      <a href="#skills">Skills</a>
+      <a href="#experience">Experience</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <div>
+      <div class="status"><i></i>Open to Summer 2027 internships &amp; co-ops</div>
+      <h1>Alimatou<br><span>Konaté</span></h1>
+      <p class="lede">Whether I'm at a <strong>breadboard</strong> or a <strong>sewing machine</strong>, I'm happiest when something I built finally works. I'm an engineering student at <strong>Temple</strong>, and I love making things, from circuits and code to a startup.</p>
+      <div class="links">
+        <a class="btn primary" href="https://github.com/alimatoukonate00-web">GitHub ↗</a>
+        <a class="btn" href="https://www.linkedin.com/in/alimatou-konat%C3%A9-939a2b2b3">LinkedIn ↗</a>
+        <a class="btn" href="#contact">Email</a>
+      </div>
+    </div>
+    <div class="scope" aria-label="Quick facts">
+      <div class="scope-head"><span class="label">CH1 · Profile</span><span class="label" style="color:var(--probe)">● Live</span></div>
+      <canvas id="wave" aria-hidden="true"></canvas>
+      <div class="readouts">
+        <div><b>B.S. ECE</b><span>Expected Dec 2028</span></div>
+        <div><b>3.35 / 4.0</b><span>GPA</span></div>
+        <div><b>2026</b><span>Diamond Research Scholar</span></div>
+        <div><b>2nd Place</b><span>Be Your Own Boss Bowl 2025</span></div>
+      </div>
+    </div>
+  </div>
+
+  <section id="work">
+    <div class="sec-head">
+      <h2>Selected work</h2>
+      <p>Research, hardware and software projects. Each one is labeled with a reference designator, the way parts are labeled on a schematic.</p>
+    </div>
+
+    <div class="projects">
+
+      <article class="proj feature">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div class="proj-top"><span class="ref">U1</span><span class="tag live">Research · 2026</span></div>
+          <h3>Hybrid Solar–Biomass Microgrid for Underserved Communities in Mali</h3>
+          <p>Diamond Research Scholar project at Temple University, mentored by Dr. Cory Budischak. I model small hybrid energy systems that could give rural West African communities reliable power.</p>
+          <ul>
+            <li>Designing a hybrid solar and biomass microgrid for villages without dependable grid access.</li>
+            <li>Earlier paper, <em>Enhancing Grid Reliability in Mali</em>, analyzed dual-axis tracking PV with biomass-backup micro-clusters.</li>
+            <li>Revised the paper through mentor review: energy unit corrections (kW vs. kWh) and added citations.</li>
+          </ul>
+          <div class="chips"><span>SAM</span><span>Excel</span><span>Energy modeling</span><span>Technical writing</span></div>
+        </div>
+        <div class="diagram" aria-label="System block diagram: solar PV and biomass backup feed a microgrid that serves village loads">
+          <div class="row">
+            <div class="node">Dual-axis<br>PV array</div><div class="wire"></div>
+            <div class="node hot">Micro-<br>grid bus</div><div class="wire"></div>
+            <div class="node">Village<br>loads</div>
+          </div>
+          <div class="row">
+            <div class="node">Biomass<br>backup</div><div class="wire"></div>
+            <div class="node">Dispatch<br>&amp; sizing</div><div></div><div></div>
+          </div>
+          <div class="cap">Fig. 1 · System concept</div>
+        </div>
+      </article>
+
+      <article class="proj">
+        <div class="proj-top"><span class="ref">U2</span><span class="tag live">In progress · Fall 2026</span></div>
+        <h3>Digital Logic Design in Verilog HDL</h3>
+        <p>Writing hardware description modules in Verilog and building toward RTL design and verification. Finished designs will be posted on GitHub.</p>
+        <div class="chips"><span>Verilog HDL</span><span>Digital logic</span><span>RTL</span></div>
+      </article>
+
+      <article class="proj">
+        <div class="proj-top"><span class="ref">U3</span><span class="tag">Embedded · ECE 1111</span></div>
+        <h3>Checksum-Verified Client/Server Link</h3>
+        <p>Built a client/server protocol between microcontrollers, driven by a state machine that checks every message with a checksum before accepting it.</p>
+        <ul>
+          <li>UART serial and micro:bit radio communication.</li>
+          <li>State machine handles send, verify and retry.</li>
+        </ul>
+        <div class="chips"><span>C/C++</span><span>State machines</span><span>UART</span><span>micro:bit (ARM)</span></div>
+      </article>
+
+      <article class="proj">
+        <div class="proj-top"><span class="ref">U4</span><span class="tag">Embedded · ECE 1111</span></div>
+        <h3>Encryption on Microcontrollers</h3>
+        <p>Implemented the Caesar cipher, Diffie-Hellman key exchange and RSA on embedded hardware, using bit-level operations to pack and transform data.</p>
+        <div class="chips"><span>Bitwise ops</span><span>Cryptography</span><span>Arduino</span><span>micro:bit</span></div>
+      </article>
+
+      <article class="proj">
+        <div class="proj-top"><span class="ref">U5</span><span class="tag">Embedded · ECE 1111</span></div>
+        <h3>Sensor &amp; Display Systems on Arduino</h3>
+        <p>Programmed Arduino boards to read temperature sensors, drive 7-segment displays, and compute streaming statistics and Fourier transforms in real time. Circuits were designed and simulated in Tinkercad first.</p>
+        <div class="chips"><span>Arduino</span><span>C/C++</span><span>Tinkercad</span><span>Real-time DSP</span></div>
+      </article>
+
+      <article class="proj">
+        <div class="proj-top"><span class="ref">U6</span><span class="tag">Software · ECE 1111</span></div>
+        <h3>Signal Processing &amp; Binary Data Tools</h3>
+        <p>Command-line tools in C, C++ and Python, built and tested on a Linux engineering server.</p>
+        <ul>
+          <li>Binary file I/O with <span class="mono">fread</span>/<span class="mono">fwrite</span> and dynamic memory.</li>
+          <li>Sinewave generation, histograms, matrix multiplication and signal power analysis.</li>
+          <li>Recursive directory search in C++.</li>
+        </ul>
+        <div class="chips"><span>C</span><span>C++</span><span>Python</span><span>Bash</span><span>Linux</span></div>
+      </article>
+
+      <article class="proj">
+        <div class="proj-top"><span class="ref">U7</span><span class="tag">Venture · 2025</span></div>
+        <h3>Plastopia</h3>
+        <p>Founder and project lead of a venture that turns recycled HDPE and PP plastic into higher-value products.</p>
+        <span class="award">▲ 2nd Place, Undergraduate Track · 27th Annual Be Your Own Boss Bowl</span>
+        <div class="chips"><span>Sustainability</span><span>Product design</span><span>Pitching</span></div>
+      </article>
+
+      <article class="proj">
+        <div class="proj-top"><span class="ref">U8</span><span class="tag">Leadership · 2026</span></div>
+        <h3>TEDxTempleUniversity 2026 Finance</h3>
+        <p>As Head of Finance and Sponsorship for "Powered Through Perseverance," I run the event budget and sponsor outreach.</p>
+        <ul>
+          <li>18-sheet financial model: revenue, expenses, sponsorship, cash flow, KPIs and a risk register.</li>
+          <li>Secured the event's first sponsor at the Silver tier.</li>
+        </ul>
+        <div class="chips"><span>Financial modeling</span><span>Excel</span><span>Partnerships</span></div>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="sec-head">
+      <h2>Pinout</h2>
+      <p>My technical skills, drawn as an IC. Hardware on the left, software and analysis on the right.</p>
+    </div>
+    <div class="pinout-wrap">
+      <svg id="pinout" viewBox="0 0 900 430" role="img" aria-label="Skills chip diagram. Hardware: Verilog HDL, digital logic, Arduino, micro:bit ARM, UART serial, circuit simulation in Tinkercad, hardware troubleshooting. Software and analysis: C and C++, Python, Bash, Linux, MATLAB, SAM energy modeling, Excel."></svg>
+      <div class="legend"><span><i style="background:var(--probe)"></i>Currently building</span><span><i style="background:var(--ink)"></i>Used in coursework &amp; projects</span></div>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="cols">
+      <div>
+        <div class="sec-head"><h2>Experience</h2></div>
+        <ul class="timeline">
+          <li>
+            <h3>Diamond Research Scholar</h3>
+            <span class="where">Temple University, College of Engineering</span>
+            <span class="when">Summer 2025 – Present</span>
+            <p>Hybrid microgrid research for rural Mali with Dr. Cory Budischak.</p>
+          </li>
+          <li>
+            <h3>Classroom Technology Support Assistant</h3>
+            <span class="where">Fox School of Business, Temple University</span>
+            <span class="when">August 2026 – Present</span>
+            <p>Set up classrooms and troubleshoot audiovisual and computer equipment across Speakman, Alter and Liacouras halls before scheduled events.</p>
+          </li>
+          <li>
+            <h3>Undergraduate Teaching Assistant</h3>
+            <span class="where">Temple University, College of Engineering</span>
+            <span class="when">Fall 2025</span>
+            <p>Supported first-year engineering students with lab work, design projects and mentoring.</p>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <div class="sec-head"><h2>Leadership</h2></div>
+        <ul class="timeline">
+          <li>
+            <h3>Head of Finance &amp; Sponsorship</h3>
+            <span class="where">TEDxTempleUniversity</span>
+            <span class="when">Summer 2026 – Present</span>
+            <p>Budget planning, sponsor outreach and partnership agreements.</p>
+          </li>
+          <li>
+            <h3>Organizing Committee Member</h3>
+            <span class="where">OwlHacks</span>
+            <span class="when">Summer 2026 – Present</span>
+            <p>Help plan and run Temple's annual hackathon.</p>
+          </li>
+          <li>
+            <h3>Member, International Student Advisory Board</h3>
+            <span class="where">Temple University</span>
+            <span class="when">Summer 2025 – Present</span>
+            <p>Coordinate events and connect international students with the ISSS office.</p>
+          </li>
+          <li>
+            <h3>Sustainability Immersion Program</h3>
+            <span class="where">Temple University</span>
+            <span class="when">Spring 2024</span>
+            <p>Selected for a competitive program on environmental justice and sustainability.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="facts">
+      <div class="fact">
+        <span class="label">Education</span>
+        <h3>B.S. Electrical &amp; Computer Engineering</h3>
+        <ul>
+          <li>Temple University, College of Engineering</li>
+          <li>Expected December 2028 · GPA 3.35</li>
+        </ul>
+      </div>
+      <div class="fact">
+        <span class="label">Coursework</span>
+        <h3>Relevant courses</h3>
+        <ul>
+          <li>Engineering Computation I: C/C++, Python, Linux, Arduino</li>
+          <li>Physics II: Electricity &amp; Magnetism</li>
+          <li>Digital logic with Verilog HDL (in progress)</li>
+        </ul>
+      </div>
+      <div class="fact">
+        <span class="label">Languages</span>
+        <h3>Trilingual</h3>
+        <ul>
+          <li>English</li>
+          <li>French</li>
+          <li>Bambara</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer id="contact" class="titleblock">
+    <div>
+      <span class="label">Contact</span>
+      <b>Let's talk about Summer 2027</b>
+      <span class="mono" style="font-size:14px">alimatou.konate@temple.edu</span>
+    </div>
+    <div><span class="label">GitHub</span><a href="https://github.com/alimatoukonate00-web">alimatoukonate00-web</a></div>
+    <div><span class="label">LinkedIn</span><a href="https://www.linkedin.com/in/alimatou-konat%C3%A9-939a2b2b3">alimatou-konaté</a></div>
+    <div><span class="label">Drawn by</span><b>A. Konaté</b><span class="label">Rev 2026.10 · Sheet 1 of 1</span></div>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  var css = function (n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); };
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* Oscilloscope trace: a square wave (digital) riding over a sine (power) */
+  var c = document.getElementById("wave"), ctx = c.getContext("2d"), t = 0;
+  function size() {
+    var r = c.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+    c.width = r.width * d; c.height = r.height * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+  }
+  function draw() {
+    var w = c.clientWidth, h = c.clientHeight, mid = h / 2;
+    ctx.clearRect(0, 0, w, h);
+    ctx.strokeStyle = css("--line"); ctx.lineWidth = 1;
+    for (var x = 0; x <= w; x += w / 10) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+    for (var y = 0; y <= h; y += h / 6) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+    ctx.lineWidth = 2; ctx.strokeStyle = css("--blue"); ctx.beginPath();
+    for (var i = 0; i <= w; i++) { var v = mid + Math.sin((i / w) * Math.PI * 4 + t) * h * 0.3; i ? ctx.lineTo(i, v) : ctx.moveTo(i, v); }
+    ctx.stroke();
+    ctx.strokeStyle = css("--probe"); ctx.beginPath();
+    var period = w / 6, off = (t * period / (Math.PI * 2)) % period;
+    for (var j = 0; j <= w; j++) {
+      var hi = ((j + off) % period) < period / 2, yy = hi ? mid - h * 0.16 : mid + h * 0.16;
+      if (j === 0) ctx.moveTo(j, yy);
+      else { var prevHi = ((j - 1 + off) % period) < period / 2; if (prevHi !== hi) ctx.lineTo(j, hi ? mid + h * 0.16 : mid - h * 0.16); ctx.lineTo(j, yy); }
+    }
+    ctx.stroke();
+  }
+  function loop() { t += 0.015; draw(); requestAnimationFrame(loop); }
+  size(); draw();
+  window.addEventListener("resize", function () { size(); draw(); });
+  if (!reduce) requestAnimationFrame(loop);
+
+  /* Skills pinout */
+  var left = [["VERILOG HDL", 1], ["DIGITAL LOGIC", 1], ["ARDUINO", 0], ["MICRO:BIT (ARM)", 0], ["UART SERIAL", 0], ["TINKERCAD SIM", 0], ["HW TROUBLESHOOT", 0]];
+  var right = [["C / C++", 0], ["PYTHON", 0], ["BASH", 0], ["LINUX", 0], ["MATLAB", 0], ["SAM ENERGY", 0], ["EXCEL", 0]];
+  var svg = document.getElementById("pinout"), NS = "http://www.w3.org/2000/svg";
+  function el(tag, a, txt) { var e = document.createElementNS(NS, tag); for (var k in a) e.setAttribute(k, a[k]); if (txt) e.textContent = txt; svg.appendChild(e); return e; }
+  function render() {
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var ink = css("--ink"), muted = css("--muted"), probe = css("--probe"), surf = css("--surface"), blue = css("--blue");
+    var cx = 310, cw = 280, top = 30, ch = 370, n = left.length, gap = ch / (n + 1);
+    el("rect", { x: cx, y: top, width: cw, height: ch, rx: 10, fill: surf, stroke: ink, "stroke-width": 2 });
+    el("circle", { cx: cx + 22, cy: top + 22, r: 7, fill: "none", stroke: ink, "stroke-width": 1.5 });
+    el("text", { x: cx + cw / 2, y: top + ch / 2 - 14, "text-anchor": "middle", "font-family": "Bricolage Grotesque, sans-serif", "font-weight": 800, "font-size": 34, fill: ink }, "AK-ECE");
+    el("text", { x: cx + cw / 2, y: top + ch / 2 + 16, "text-anchor": "middle", "font-family": "IBM Plex Mono, monospace", "font-size": 13, fill: muted }, "TEMPLE UNIV · REV 2028");
+    el("text", { x: cx + cw / 2, y: top + ch / 2 + 40, "text-anchor": "middle", "font-family": "IBM Plex Mono, monospace", "font-size": 12, fill: blue }, "14-PIN · DIP");
+    [[left, -1], [right, 1]].forEach(function (side) {
+      side[0].forEach(function (p, i) {
+        var y = top + gap * (i + 1), num = side[1] < 0 ? i + 1 : 2 * n - i;
+        var x0 = side[1] < 0 ? cx : cx + cw, x1 = x0 + side[1] * 44, col = p[1] ? probe : ink;
+        el("line", { x1: x0, y1: y, x2: x1, y2: y, stroke: col, "stroke-width": 3 });
+        el("rect", { x: x1 + (side[1] < 0 ? -6 : 0), y: y - 3, width: 6, height: 6, fill: col });
+        el("text", { x: x0 - side[1] * 10, y: y + 4, "text-anchor": side[1] < 0 ? "start" : "end", "font-family": "IBM Plex Mono, monospace", "font-size": 11, fill: muted }, String(num));
+        el("text", { x: x1 + side[1] * 14, y: y + 5, "text-anchor": side[1] < 0 ? "end" : "start", "font-family": "IBM Plex Mono, monospace", "font-weight": 500, "font-size": 14, fill: col }, p[0]);
+      });
+    });
+  }
+  render();
+  if (window.matchMedia) {
+    var mq = window.matchMedia("(prefers-color-scheme: dark)");
+    if (mq.addEventListener) mq.addEventListener("change", function () { render(); draw(); });
+  }
+  new MutationObserver(function () { render(); draw(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+})();
+</script>
+</body>
+</html>
